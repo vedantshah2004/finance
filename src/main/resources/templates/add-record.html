@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Record</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="container mt-4">
+
+<h2>Add Financial Record</h2>
+
+<form id="recordForm">
+    <input class="form-control mb-2" type="number" placeholder="Amount" id="amount" required>
+
+    <select class="form-control mb-2" id="type">
+        <option value="INCOME">Income</option>
+        <option value="EXPENSE">Expense</option>
+    </select>
+
+    <input class="form-control mb-2" type="text" placeholder="Category" id="category">
+
+    <input class="form-control mb-2" type="date" id="date">
+
+    <input class="form-control mb-2" type="text" placeholder="Notes" id="notes">
+
+    <button class="btn btn-success">Save</button>
+</form>
+
+<script>
+document.getElementById("recordForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    const data = {
+        amount: document.getElementById("amount").value,
+        type: document.getElementById("type").value,
+        category: document.getElementById("category").value,
+        date: document.getElementById("date").value,
+        notes: document.getElementById("notes").value
+    };
+
+    fetch('/api/records', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(data)
+    }).then(() => {
+        alert("Saved!");
+        window.location.href = "/home";
+    });
+});
+</script>
+
+</body>
+</html>
