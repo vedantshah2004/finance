@@ -10,44 +10,50 @@
     <h2 class="text-center">Sign Up</h2>
 
     <form id="signupForm">
-        <input class="form-control mb-3" type="text" placeholder="Username" id="username" required>
+    <input class="form-control mb-3" type="text" placeholder="Username" id="username" required minlength="3">
+    <small class="text-danger" id="usernameError"></small>
 
-        <input class="form-control mb-3" type="password" placeholder="Password" id="password" required>
+    <input class="form-control mb-3" type="password" placeholder="Password" id="password" required minlength="5">
+    <small class="text-danger" id="passwordError"></small>
 
-        <button class="btn btn-success w-100">Register</button>
-    </form>
-
-    <p class="text-center mt-3">
-        Already have an account?
-        <a href="/login">Login</a>
-    </p>
-</div>
+    <button class="btn btn-success w-100">Register</button>
+</form>
 
 <script>
 document.getElementById("signupForm").addEventListener("submit", function(e) {
     e.preventDefault();
 
-    const data = {
-        username: document.getElementById("username").value,
-        password: document.getElementById("password").value
-    };
+    document.getElementById("usernameError").innerText = '';
+    document.getElementById("passwordError").innerText = '';
+
+    const username = document.getElementById("username").value.trim();
+    const password = document.getElementById("password").value.trim();
+    let valid = true;
+
+    if(username.length < 3) {
+        document.getElementById("usernameError").innerText = "Username must be at least 3 characters";
+        valid = false;
+    }
+    if(password.length < 5) {
+        document.getElementById("passwordError").innerText = "Password must be at least 5 characters";
+        valid = false;
+    }
+    if(!valid) return;
 
     fetch('/auth/register', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify(data)
+        body: JSON.stringify({username, password})
     })
     .then(res => {
-        if (!res.ok) throw new Error("Signup failed");
+        if(!res.ok) return res.json().then(err => { throw new Error(err.message || "Signup failed"); });
         return res.json();
     })
     .then(() => {
         alert("Registration Successful!");
         window.location.href = "/login";
     })
-    .catch(err => {
-        alert(err.message);
-    });
+    .catch(err => alert(err.message));
 });
 </script>
 

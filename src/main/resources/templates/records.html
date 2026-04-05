@@ -23,8 +23,15 @@
 </table>
 
 <script>
-fetch('/api/records')
-.then(res => res.json())
+const token = localStorage.getItem("token");
+
+fetch('/api/records', {
+    headers: { 'Authorization': 'Bearer ' + token } // send token for auth
+})
+.then(res => {
+    if(!res.ok) throw new Error("Failed to fetch records");
+    return res.json();
+})
 .then(data => {
     let rows = '';
     data.forEach(r => {
@@ -37,7 +44,8 @@ fetch('/api/records')
         </tr>`;
     });
     document.getElementById('tableBody').innerHTML = rows;
-});
+})
+.catch(err => alert(err.message));
 </script>
 
 </body>

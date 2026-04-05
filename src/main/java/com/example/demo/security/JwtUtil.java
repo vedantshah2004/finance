@@ -13,14 +13,13 @@ import io.jsonwebtoken.security.Keys;
 public class JwtUtil {
 
     private final Key key;
-
     private final long expiration;
 
     public JwtUtil(
         @Value("${jwt.secret}") String secret,
         @Value("${jwt.expiration}") long expiration
     ) {
-        this.key = Keys.hmacShaKeyFor(secret.getBytes()); 
+        this.key = Keys.hmacShaKeyFor(secret.getBytes());
         this.expiration = expiration;
     }
 
@@ -29,7 +28,7 @@ public class JwtUtil {
                 .setSubject(username)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + expiration))
-                .signWith(key, SignatureAlgorithm.HS256) 
+                .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
     }
 
